@@ -12,8 +12,8 @@ from Causal_Test import general_test
 import csv
 
 CWD = os.getcwd()
-DATASET_NAMES = ["FaceFour", "InlineSkate", "PickupGestureWiimoteZ", "SemgHandMovementCh2"]
-
+DATASET_NAMES = ["InlineSkate", "PickupGestureWiimoteZ", "SemgHandMovementCh2"]
+#"FaceFour", 
 TO_IMPORT =  ["mixsd0.1_0.1_causaldb", "mixsd0.1_0.05_causaldb", "mixsd0.2_0.1_causaldb", "mixsd0.2_0.05_causaldb", "randomsd0.1_effectdb", "randomsd0.2_effectdb", "rwalksd0.1_effectdb", "rwalksd0.05_effectdb"]
 
 DATA_PATH = CWD +"/test_files/"
@@ -88,7 +88,7 @@ def run_test(dataset_dict):
 def saving_csv(brute_results, result_by_neighbor, attr):
     # print(type(attr.shape))
     # print(type(attr.lagged))
-    with open(f'{CWD}/model_results_granger/{attr.dataset_name}_{attr.import_type}_P{attr.alpha_level}_L{attr.lagged}_{attr.representation}_{attr.model}_results.csv', 'w') as f:
+    with open(f'{CWD}/model_results_granger2/{attr.dataset_name}_{attr.import_type}_P{attr.alpha_level}_L{attr.lagged}_{attr.representation}_{attr.model}_results.csv', 'w') as f:
         csvwriter = csv.writer(f)
         csvwriter.writerow([int(attr.shape)] + [int(attr.lagged)] + ['brute'] + list(brute_results.values()))
         for n_num in result_by_neighbor:
