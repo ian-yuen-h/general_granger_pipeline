@@ -8,7 +8,7 @@ import copy
 from TimeSeries import TimeSeries
 from copy import deepcopy
 from Causal_inference import check_with_original
-from Causal_Test import general_test
+from Causal_Test import general_test_non_GRAIL
 import csv
 
 CWD = os.getcwd()
@@ -74,7 +74,7 @@ def run_test(dataset_dict):
             n = n1+n2
             for alpha_level in PVALS:
                 for lagged in LAGS:
-                    brute_results, result_by_neighbor = general_test(causaldb, effectdb, trueMat, best_gamma = BEST_GAMMA, neighbor_param= NEIGHBORS,lag = lagged, pval=alpha_level)
+                    brute_results, result_by_neighbor = general_test_non_GRAIL(causaldb, effectdb, trueMat, best_gamma = BEST_GAMMA, neighbor_param= NEIGHBORS,lag = lagged, pval=alpha_level)
                     attrz = copy.deepcopy(attr_hold)
                     attrz.alpha_level = alpha_level
                     attrz.lagged = lagged
@@ -89,7 +89,7 @@ def saving_csv(brute_results, result_by_neighbor, attr):
     # print(type(attr.shape))
     # print(type(attr.lagged))
     counter = 0
-    with open(f'{CWD}/model_results_granger_GRAIL/{attr.dataset_name}_{attr.import_type}_P{attr.alpha_level}_L{attr.lagged}_{attr.representation}_{attr.model}_results.csv', 'w') as f:
+    with open(f'{CWD}/model_results_granger_non_GRAIL/{attr.dataset_name}_{attr.import_type}_P{attr.alpha_level}_L{attr.lagged}_{attr.representation}_{attr.model}_results.csv', 'w') as f:
         csvwriter = csv.writer(f)
         csvwriter.writerow(["shape"], ["lagged"], ["type"], ["precision"], ["recall"], ["fscore"], ["runtime"])
         csvwriter.writerow([int(attr.shape)] + [int(attr.lagged)] + ['brute'] + list(brute_results.values()))

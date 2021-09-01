@@ -69,6 +69,57 @@ def general_test(Cause_TS, Effect_TS, trueMat, best_gamma, neighbor_param =[2, 5
 
     return brute_results, result_by_neighbor
 
+def general_test_non_GRAIL(Cause_TS, Effect_TS, trueMat, best_gamma, neighbor_param =[2, 5, 10, 100], lag = 2, pval = 0.05):
+    """
+    test() but you can specify query database and effect database
+    :param n: Number of time series
+    :param lag: The lag of causality
+    :param m: time series size
+    :return: brute_results is the results of the standard method,
+    results_by_neighbor is the results with GRAiL Pruning
+    """
+    n1 = Cause_TS.shape[0]
+    n2 = Effect_TS.shape[0]
+    # representation = Representation.GRAIL(kernel="SINK", d = 100, gamma = best_gamma)
+
+    grailMat = np.zeros((n1, n2))
+    t = time()
+    bruteMat = general_granger_matrix(Cause_TS,Effect_TS, lag,pval=pval)
+    bruteTime = time() - t
+
+    result_by_neighbor = {}
+
+    # TRAIN_TS, TEST_TS = representation.get_rep_train_test(Effect_TS, Cause_TS)
+    brute_res = check_with_original(trueMat, bruteMat)
+    brute_results = {'precision' : brute_res[0], 'recall' : brute_res[1],
+                                            'fscore' : brute_res[2], 'runtime' : bruteTime}
+
+    for neighbor_num in neighbor_param:
+        if neighbor_num >= n2:
+            continue
+        neighbors, _, _ = kNN(Effect_TS, Cause_TS, method="ED", k=neighbor_num, representation=None, use_exact_rep=True,
+                              pq_method=None) #changed pq
+
+        exact_neighbors, _, _ = kNN(Effect_TS, Cause_TS, method="SINK", k=neighbor_num, representation=None, gamma_val=best_gamma)
+
+        knn_map_accuracy = MAP(exact_neighbors, neighbors)
+        knn_recall_accuracy = avg_recall_measure(exact_neighbors, neighbors)
+
+        print(knn_recall_accuracy, knn_map_accuracy)
+
+        t = time()
+        for i in range(n1):
+           for j in neighbors[i]:
+                grailMat[i,j] = granger_causality(Effect_TS[j], Cause_TS[i], lag, pval=pval)
+        prunedtime = time() - t
+
+        grail_results = check_with_original(trueMat, grailMat)
+        result_by_neighbor[neighbor_num] = {'precision' : grail_results[0], 'recall' : grail_results[1],
+                                            'fscore' : grail_results[2], 'runtime' : prunedtime,'map' : knn_map_accuracy,
+                                            'knn_recall' : knn_recall_accuracy}
+
+    return brute_results, result_by_neighbor
+
 
 def test_only_grail(TS, trueMat, n = 100, lag = 2, m = 128, neighbor_param = [10,100], tune = False):
     #try not setting gamma
