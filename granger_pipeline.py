@@ -12,7 +12,7 @@ from Causal_Test import general_test
 import csv
 
 CWD = os.getcwd()
-DATASET_NAMES = ["InlineSkate", "PickupGestureWiimoteZ", "SemgHandMovementCh2"]
+DATASET_NAMES = ["FaceFour","InlineSkate", "PickupGestureWiimoteZ", "SemgHandMovementCh2"]
 #"FaceFour", 
 TO_IMPORT =  ["mixsd0.1_0.1_causaldb", "mixsd0.1_0.05_causaldb", "mixsd0.2_0.1_causaldb", "mixsd0.2_0.05_causaldb", "randomsd0.1_effectdb", "randomsd0.2_effectdb", "rwalksd0.1_effectdb", "rwalksd0.05_effectdb"]
 
