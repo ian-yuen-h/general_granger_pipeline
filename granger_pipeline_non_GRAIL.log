@@ -1,0 +1,26 @@
+nohup: ignoring input
+Traceback (most recent call last):
+  File "/home/ianhy/.local/lib/python3.7/site-packages/statsmodels/tsa/stattools.py", line 1348, in grangercausalitytests
+    maxlag = int_like(maxlag, "maxlag")
+  File "/home/ianhy/.local/lib/python3.7/site-packages/statsmodels/tools/validation/validation.py", line 318, in int_like
+    " or timedelta64){1}".format(name, extra_text)
+TypeError: maxlag must be integer_like (int or np.integer, but not bool or timedelta64)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "granger_pipeline.py", line 108, in <module>
+    main()
+  File "granger_pipeline.py", line 104, in main
+    run_test(dataset_dict)
+  File "granger_pipeline.py", line 78, in run_test
+    brute_results, result_by_neighbor = general_test(causaldb, effectdb, trueMat, best_gamma = BEST_GAMMA, neighbor_param= NEIGHBORS,lag = lagged, pval=alpha_level)
+  File "/tartarus/ianhy/github/general_test_granger_pipeline/general_granger_pipeline/Causal_Test.py", line 36, in general_test
+    bruteMat = general_granger_matrix(Cause_TS,Effect_TS, lag,pval=pval)
+  File "/tartarus/ianhy/github/general_test_granger_pipeline/general_granger_pipeline/Causal_inference.py", line 188, in general_granger_matrix
+    gr_mat[i,j] = granger_causality(Effect_TS[j], Cause_TS[i], lag, pval=pval, check_one_lag=check_one_lag)
+  File "/tartarus/ianhy/github/general_test_granger_pipeline/general_granger_pipeline/Causal_inference.py", line 72, in granger_causality
+    res = grangercausalitytests(df, lag, verbose=False)
+  File "/home/ianhy/.local/lib/python3.7/site-packages/statsmodels/tsa/stattools.py", line 1353, in grangercausalitytests
+    lags = np.array([int(lag) for lag in maxlag])
+TypeError: 'float' object is not iterable

@@ -20,7 +20,7 @@ DATA_PATH = CWD +"/test_files/"
 
 BEST_GAMMA = 5
 NEIGHBORS =[2, 5, 10, 100]
-PVALS = [0.01, 0.025, 0.05, 0.1]
+PVALS = [0.05, 0.1]
 LAGS = [1, 2]
 
 TAU_MAX = 3
@@ -72,8 +72,10 @@ def run_test(dataset_dict):
             n1 = causaldb.shape[0]
             n2 = effectdb.shape[0]
             n = n1+n2
+            target_lag = [int(n*0.05), int(n*0.1)]       #change to signal length
             for alpha_level in PVALS:
-                for lagged in LAGS:
+                for lagged in target_lag:
+                    print(lagged)
                     brute_results, result_by_neighbor = general_test(causaldb, effectdb, trueMat, best_gamma = BEST_GAMMA, neighbor_param= NEIGHBORS,lag = lagged, pval=alpha_level)
                     attrz = copy.deepcopy(attr_hold)
                     attrz.alpha_level = alpha_level
@@ -91,9 +93,9 @@ def saving_csv(brute_results, result_by_neighbor, attr):
     counter = 0
     with open(f'{CWD}/model_results_granger_GRAIL/{attr.dataset_name}_{attr.import_type}_P{attr.alpha_level}_L{attr.lagged}_{attr.representation}_{attr.model}_results.csv', 'w') as f:
         csvwriter = csv.writer(f)
-        csvwriter.writerow(["shape"], ["lagged"], ["type"], ["precision"], ["recall"], ["fscore"], ["runtime"])
+        csvwriter.writerow(["shape", "lagged", "type", "precision", "recall", "fscore", "runtime"])
         csvwriter.writerow([int(attr.shape)] + [int(attr.lagged)] + ['brute'] + list(brute_results.values()))
-        csvwriter.writerow(["shape"], ["lagged"], ["neighbors"], ["precision"], ["recall"], ["fscore"], ["runtime"], ["map"], ["knn_recall"])
+        csvwriter.writerow(["shape", "lagged", "neighbors", "precision", "recall", "fscore", "runtime", "map", "knn_recall"])
 
         for n_num in result_by_neighbor:
                 csvwriter.writerow([int(attr.shape)] + [int(attr.lagged)] + [NEIGHBORS[counter]] + list(result_by_neighbor[n_num].values()))

@@ -1,0 +1,5 @@
+nohup: ignoring input
+  File "granger_pipeline.py", line 95
+    csvwriter.writerow(["shape", "lagged", "type", "precision", "recall", "fscore", "runtime")
+                                                                                             ^
+SyntaxError: invalid syntax

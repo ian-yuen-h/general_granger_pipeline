@@ -20,7 +20,7 @@ DATA_PATH = CWD +"/test_files/"
 
 BEST_GAMMA = 5
 NEIGHBORS =[2, 5, 10, 100]
-PVALS = [0.01, 0.025, 0.05, 0.1]
+PVALS = [0.05, 0.1]
 LAGS = [1, 2]
 
 TAU_MAX = 3
@@ -72,8 +72,9 @@ def run_test(dataset_dict):
             n1 = causaldb.shape[0]
             n2 = effectdb.shape[0]
             n = n1+n2
+            target_lag = [n*0.05, n*0.1] 
             for alpha_level in PVALS:
-                for lagged in LAGS:
+                for lagged in target_lag:
                     brute_results, result_by_neighbor = general_test_non_GRAIL(causaldb, effectdb, trueMat, best_gamma = BEST_GAMMA, neighbor_param= NEIGHBORS,lag = lagged, pval=alpha_level)
                     attrz = copy.deepcopy(attr_hold)
                     attrz.alpha_level = alpha_level
